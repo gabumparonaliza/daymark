@@ -6,32 +6,134 @@
   <title>Daymark</title>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef2ff;
+      margin: 0;
+      padding: 40px 20px;
+    }
+
+    .app {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #312e81;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      color: #64748b;
+    }
+
+    .entry {
+      display: flex;
+      gap: 10px;
+      margin: 25px 0;
+    }
+
+    #taskInput {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+    }
+
+    button {
+      border: none;
+      border-radius: 7px;
+      padding: 9px 13px;
+      background: #4f46e5;
+      color: white;
+      cursor: pointer;
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .filters button {
+      background: #64748b;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .task-text {
+      flex: 1;
+    }
+
     .completed {
       text-decoration: line-through;
-      color: gray;
+      color: #94a3b8;
+    }
+
+    .remove {
+      background: #ef4444;
+    }
+
+    #emptyMessage {
+      color: #94a3b8;
+      text-align: center;
     }
   </style>
 </head>
 
 <body>
 
-  <h1>Daymark</h1>
-  <p>Plan your day, one task at a time.</p>
+  <div class="app">
 
-  <input
-    type="text"
-    id="taskInput"
-    placeholder="What needs to be done?"
-  >
+    <h1>Daymark</h1>
+    <p class="subtitle">Plan your day, one task at a time.</p>
 
-  <button id="addButton">Add Task</button>
+    <div class="entry">
+      <input
+        type="text"
+        id="taskInput"
+        placeholder="What needs to be done?"
+      >
 
-  <ul id="taskList"></ul>
+      <button id="addButton">Add</button>
+    </div>
+
+    <div class="filters">
+      <button onclick="filterTasks('all')">All</button>
+      <button onclick="filterTasks('active')">Active</button>
+      <button onclick="filterTasks('completed')">Done</button>
+    </div>
+
+    <ul id="taskList"></ul>
+
+    <p id="emptyMessage">Your day is clear.</p>
+
+  </div>
 
   <script>
     const taskInput = document.getElementById("taskInput");
     const addButton = document.getElementById("addButton");
     const taskList = document.getElementById("taskList");
+    const emptyMessage = document.getElementById("emptyMessage");
 
     addButton.addEventListener("click", addTask);
 
@@ -49,28 +151,57 @@
 
       const text = document.createElement("span");
       text.textContent = task;
+      text.className = "task-text";
 
       checkbox.addEventListener("change", function () {
         text.classList.toggle("completed");
       });
 
-      const deleteButton = document.createElement("button");
-      deleteButton.textContent = "Remove";
+      const removeButton = document.createElement("button");
+      removeButton.textContent = "Remove";
+      removeButton.className = "remove";
 
-      deleteButton.addEventListener("click", function () {
+      removeButton.addEventListener("click", function () {
         item.remove();
+        updateMessage();
       });
 
       item.appendChild(checkbox);
       item.appendChild(text);
-      item.appendChild(deleteButton);
+      item.appendChild(removeButton);
 
       taskList.appendChild(item);
 
       taskInput.value = "";
+
+      updateMessage();
+    }
+
+    function filterTasks(filter) {
+      const tasks = taskList.querySelectorAll("li");
+
+      tasks.forEach(function (task) {
+        const completed = task.querySelector("input").checked;
+
+        if (filter === "all") {
+          task.style.display = "flex";
+        }
+
+        if (filter === "active") {
+          task.style.display = completed ? "none" : "flex";
+        }
+
+        if (filter === "completed") {
+          task.style.display = completed ? "flex" : "none";
+        }
+      });
+    }
+
+    function updateMessage() {
+      emptyMessage.style.display =
+        taskList.children.length === 0 ? "block" : "none";
     }
   </script>
 
 </body>
 </html>
-s
