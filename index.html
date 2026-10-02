@@ -10,5 +10,21 @@
   <h1>Daymark</h1>
   <p>Plan your day, one task at a time.</p>
 
+  <input
+    type="text"
+    id="taskInput"
+    placeholder="What needs to be done?"
+  >
+
+  <button id="addButton">Add Task</button>
+
+  <ul id="taskList"></ul>
+
+  <script>
+    const taskInput = document.getElementById("taskInput");
+    const addButton = document.getElementById("addButton");
+    const taskList = document.getElementById("taskList");
+  </script>
+
 </body>
 </html>
