@@ -12,33 +12,38 @@
 
     body {
       font-family: Arial, sans-serif;
-      background: #eef2ff;
+      background: linear-gradient(135deg, #e0e7ff, #f8fafc);
+      min-height: 100vh;
       margin: 0;
       padding: 40px 20px;
     }
 
     .app {
-      max-width: 600px;
+      max-width: 620px;
       margin: auto;
       background: white;
-      padding: 30px;
-      border-radius: 14px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      padding: 32px;
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .header {
+      text-align: center;
     }
 
     h1 {
       color: #312e81;
-      margin-bottom: 5px;
+      margin: 0;
     }
 
     .subtitle {
       color: #64748b;
+      margin-bottom: 25px;
     }
 
     .entry {
       display: flex;
       gap: 10px;
-      margin: 25px 0;
     }
 
     #taskInput {
@@ -46,21 +51,26 @@
       padding: 12px;
       border: 1px solid #cbd5e1;
       border-radius: 8px;
+      font-size: 15px;
     }
 
     button {
       border: none;
-      border-radius: 7px;
-      padding: 9px 13px;
+      border-radius: 8px;
+      padding: 10px 14px;
       background: #4f46e5;
       color: white;
       cursor: pointer;
     }
 
+    button:hover {
+      opacity: 0.9;
+    }
+
     .filters {
       display: flex;
       gap: 8px;
-      margin-bottom: 20px;
+      margin: 20px 0;
     }
 
     .filters button {
@@ -70,18 +80,20 @@
     ul {
       list-style: none;
       padding: 0;
+      margin: 0;
     }
 
     li {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 13px 0;
+      padding: 14px 0;
       border-bottom: 1px solid #e2e8f0;
     }
 
     .task-text {
       flex: 1;
+      color: #334155;
     }
 
     .completed {
@@ -94,8 +106,19 @@
     }
 
     #emptyMessage {
-      color: #94a3b8;
       text-align: center;
+      color: #94a3b8;
+      padding: 20px;
+    }
+
+    @media (max-width: 500px) {
+      .entry {
+        flex-direction: column;
+      }
+
+      .app {
+        padding: 22px;
+      }
     }
   </style>
 </head>
@@ -104,8 +127,10 @@
 
   <div class="app">
 
-    <h1>Daymark</h1>
-    <p class="subtitle">Plan your day, one task at a time.</p>
+    <div class="header">
+      <h1>Daymark</h1>
+      <p class="subtitle">Plan your day, one task at a time.</p>
+    </div>
 
     <div class="entry">
       <input
@@ -114,13 +139,13 @@
         placeholder="What needs to be done?"
       >
 
-      <button id="addButton">Add</button>
+      <button id="addButton">Add Task</button>
     </div>
 
     <div class="filters">
       <button onclick="filterTasks('all')">All</button>
       <button onclick="filterTasks('active')">Active</button>
-      <button onclick="filterTasks('completed')">Done</button>
+      <button onclick="filterTasks('completed')">Completed</button>
     </div>
 
     <ul id="taskList"></ul>
@@ -136,6 +161,12 @@
     const emptyMessage = document.getElementById("emptyMessage");
 
     addButton.addEventListener("click", addTask);
+
+    taskInput.addEventListener("keypress", function (event) {
+      if (event.key === "Enter") {
+        addTask();
+      }
+    });
 
     function addTask() {
       const task = taskInput.value.trim();
@@ -173,6 +204,7 @@
       taskList.appendChild(item);
 
       taskInput.value = "";
+      taskInput.focus();
 
       updateMessage();
     }
@@ -185,13 +217,9 @@
 
         if (filter === "all") {
           task.style.display = "flex";
-        }
-
-        if (filter === "active") {
+        } else if (filter === "active") {
           task.style.display = completed ? "none" : "flex";
-        }
-
-        if (filter === "completed") {
+        } else {
           task.style.display = completed ? "flex" : "none";
         }
       });
