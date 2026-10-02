@@ -4,7 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Daymark</title>
+
+  <style>
+    .completed {
+      text-decoration: line-through;
+      color: gray;
+    }
+  </style>
 </head>
+
 <body>
 
   <h1>Daymark</h1>
@@ -35,7 +43,16 @@
       }
 
       const item = document.createElement("li");
-      item.textContent = task;
+
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+
+      const text = document.createElement("span");
+      text.textContent = task;
+
+      checkbox.addEventListener("change", function () {
+        text.classList.toggle("completed");
+      });
 
       const deleteButton = document.createElement("button");
       deleteButton.textContent = "Remove";
@@ -44,7 +61,10 @@
         item.remove();
       });
 
+      item.appendChild(checkbox);
+      item.appendChild(text);
       item.appendChild(deleteButton);
+
       taskList.appendChild(item);
 
       taskInput.value = "";
@@ -53,3 +73,4 @@
 
 </body>
 </html>
+s
